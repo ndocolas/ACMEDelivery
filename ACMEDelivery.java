@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -11,11 +10,8 @@ public class ACMEDelivery {
 	private Scanner entrada = null;
 	private PrintStream saidaPadrao = System.out;
 
-	private Cliente segr;
-	private Entrega edo;
 	private Clientela clientela;
 	private CadastroEntregas cadastroEntregas;
-	private int quantidadeEntregas = 0;
 
 	public ACMEDelivery() {
 		try {
@@ -28,8 +24,6 @@ public class ACMEDelivery {
 		}
 		Locale.setDefault(Locale.ENGLISH);
 
-		segr  = new Cliente("Marcelo", "marcelo.yamaguti@pucrs.br", "nao sei");
-		edo = new Entrega(10, 0.0, "Nota 10 no boletim do nicolas", segr);
 		clientela = new Clientela();
 		cadastroEntregas = new CadastroEntregas();
 	}
@@ -46,34 +40,40 @@ public class ACMEDelivery {
 	}
 
 	private void pontoExtra() {
-		menu();
-		int opcao = entrada.nextInt();
-		while (opcao!=0) {
-			switch (opcao) {
-				case 1:
-					opcao1();
-					break;
-				case 2:
-					opcao2();
-					break;
-				case 3:
-					opcao3();
-					break;
-				case 4:
-					System.out.println(clientela.toString());
-					break;
-				case 5:
-					System.out.println(cadastroEntregas.toString());
-					break;
-				case 6:
-					System.out.println(clientela.toString());
-					System.out.println(cadastroEntregas.toString());
-					break;
-				default:
-					break;
-			}
+		try {
 			menu();
-			opcao = entrada.nextInt();
+			int opcao = entrada.nextInt();
+			while (opcao!=0) {
+				switch (opcao) {
+					case 1:
+						opcao1();
+						break;
+					case 2:
+						opcao2();
+						break;
+					case 3:
+						opcao3();
+						break;
+					case 4:
+						System.out.println(clientela.toString());
+						break;
+					case 5:
+						System.out.println(cadastroEntregas.toString());
+						break;
+					case 6:
+						System.out.println(clientela.toString());
+						System.out.println(cadastroEntregas.toString());
+						break;
+					default:
+						break;
+				}
+				menu();
+				opcao = entrada.nextInt();
+			}
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+		entrada.close();
 		}
 	}
 
@@ -108,7 +108,6 @@ public class ACMEDelivery {
 	}
 
 	private void cadastraEntrega() {
-		ArrayList<Integer> codigosCadastrados = new ArrayList<>();
 
 		int codigo;
 		double preco;
@@ -124,7 +123,6 @@ public class ACMEDelivery {
 
 			if(cadastroEntregas.cadastraEntrega(new Entrega(codigo, preco, desc, clientela.pesquisaCliente(email)))) {
 				System.out.println("2;" + codigo + ";" + preco + ";" + desc + ";" + email);
-				quantidadeEntregas++;
 			}
 
 			codigo = entrada.nextInt();
