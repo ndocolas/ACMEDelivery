@@ -5,7 +5,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class ACMEDelivery {
+class mainGeral {
+	public static void main(String[] args) {
+		new ACMEDelivery().executa();
+	}
+}
+class ACMEDelivery {
 
 	private Scanner entrada = null;
 	private PrintStream saidaPadrao = System.out;
