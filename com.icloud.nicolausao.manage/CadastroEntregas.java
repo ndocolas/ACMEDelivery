@@ -2,11 +2,14 @@ import java.util.ArrayList;
 
 public class CadastroEntregas {
 
-	public ArrayList<Entrega> entregas;
-	public final String d = "ti";
+	private ArrayList<Entrega> entregas;
 
 	public CadastroEntregas () {
 		entregas = new ArrayList<>();
+	}
+
+	public ArrayList<Entrega> getListaEntregas() {
+		return entregas;
 	}
 
 	public boolean cadastraEntrega(Entrega entrega) {

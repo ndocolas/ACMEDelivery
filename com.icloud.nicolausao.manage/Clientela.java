@@ -2,11 +2,14 @@ import java.util.ArrayList;
 
 public class Clientela {
 
-	public ArrayList<Cliente> listaClientes;
-	public final String b = "ma";
+	private ArrayList<Cliente> listaClientes;
 
 	public Clientela() {
 		listaClientes = new ArrayList<>();
+	}
+
+	public ArrayList<Cliente> getListaCliente() {
+		return listaClientes;
 	}
 
 	public boolean cadastraCliente(Cliente cliente) {

@@ -4,7 +4,6 @@ public class Entrega {
 	private double valor;
 	private String descricao;
 	private Cliente cliente;
-	public final String c = "gu";
 
 	public Entrega(int codigo, double valor, String descricao, Cliente cliente) {
 			this.codigo = codigo;

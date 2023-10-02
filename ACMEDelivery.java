@@ -14,7 +14,7 @@ public class ACMEDelivery {
 	private Cliente segr;
 	private Entrega edo;
 	private Clientela clientela;
-	private CadastroEntregas VcadastroEntregas;
+	private CadastroEntregas cadastroEntregas;
 	private int quantidadeEntregas = 0;
 
 	public ACMEDelivery() {
@@ -31,7 +31,7 @@ public class ACMEDelivery {
 		segr  = new Cliente("Marcelo", "marcelo.yamaguti@pucrs.br", "nao sei");
 		edo = new Entrega(10, 0.0, "Nota 10 no boletim do nicolas", segr);
 		clientela = new Clientela();
-		VcadastroEntregas = new CadastroEntregas();
+		cadastroEntregas = new CadastroEntregas();
 	}
 
 	private void restauraES() {
@@ -40,10 +40,9 @@ public class ACMEDelivery {
 	}
 
 	public void executa() {
-		puxaTudo();
+		getAll();
 		restauraES();
 		pontoExtra();
-		segredo();
 	}
 
 	private void pontoExtra() {
@@ -64,11 +63,11 @@ public class ACMEDelivery {
 					System.out.println(clientela.toString());
 					break;
 				case 5:
-					System.out.println(VcadastroEntregas.toString());
+					System.out.println(cadastroEntregas.toString());
 					break;
 				case 6:
 					System.out.println(clientela.toString());
-					System.out.println(VcadastroEntregas.toString());
+					System.out.println(cadastroEntregas.toString());
 					break;
 				default:
 					break;
@@ -78,7 +77,7 @@ public class ACMEDelivery {
 		}
 	}
 
-	private void puxaTudo() {
+	private void getAll() {
 		cadastraCliente();
 		cadastraEntrega();
 		quantidadeClientes();
@@ -123,7 +122,7 @@ public class ACMEDelivery {
 			desc = entrada.nextLine();
 			email = entrada.nextLine();
 
-			if(VcadastroEntregas.cadastraEntrega(new Entrega(codigo, preco, desc, clientela.pesquisaCliente(email)))) {
+			if(cadastroEntregas.cadastraEntrega(new Entrega(codigo, preco, desc, clientela.pesquisaCliente(email)))) {
 				System.out.println("2;" + codigo + ";" + preco + ";" + desc + ";" + email);
 				quantidadeEntregas++;
 			}
@@ -133,18 +132,18 @@ public class ACMEDelivery {
 	}
 
 	private void quantidadeClientes() {
-		System.out.println("3;" + clientela.listaClientes.size());
+		System.out.println("3;" + clientela.getListaCliente().size());
 	}
 
 	private void quantidadeEntregas() {
-		System.out.println("4;" + VcadastroEntregas.entregas.size());
+		System.out.println("4;" + cadastroEntregas.getListaEntregas().size());
 	}
 
 	private void verCliente() {
 		boolean ver = true;
 		entrada.nextLine();
 		String email = entrada.nextLine();
-		for(Cliente x : clientela.listaClientes) {
+		for(Cliente x : clientela.getListaCliente()) {
 			if(email.equalsIgnoreCase(x.getEmail())) {
 				System.out.println("5;" + x.getEmail() + ";" + x.getNome() + ";" + x.getEndereco());
 				ver = false;
@@ -158,7 +157,7 @@ public class ACMEDelivery {
 	private void verEntrega() {
 		boolean ver = true;
 		int codigo = entrada.nextInt();
-		for(Entrega e : VcadastroEntregas.entregas) {
+		for(Entrega e : cadastroEntregas.getListaEntregas()) {
 			if(codigo == e.getCodigo()) {
 				System.out.println("6;" + e.getCodigo() + ";" + e.getValor() + ";" + e.getDescricao() + ";" + e.getCliente().getEmail() + ";" + e.getCliente().getNome() + ";" + e.getCliente().getEndereco());
 				ver = false;
@@ -173,7 +172,7 @@ public class ACMEDelivery {
 		boolean ver = true;
 		entrada.nextLine();
 		String email = entrada.nextLine();
-		for(Cliente c : clientela.listaClientes) {
+		for(Cliente c : clientela.getListaCliente()) {
 			if(email.equalsIgnoreCase(c.getEmail())) {
 				c.retornaDadosEntrega();
 				ver = false;
@@ -187,8 +186,8 @@ public class ACMEDelivery {
 	private void entregaMaiorValor() {
 		Entrega a = new Entrega(0,0,"", null);
 		double maiorValor = 0;
-		if(VcadastroEntregas.entregas.isEmpty()) System.out.println("8;Entrega inexistente");
-		for(Entrega e : VcadastroEntregas.entregas) {
+		if(cadastroEntregas.getListaEntregas().isEmpty()) System.out.println("8;Entrega inexistente");
+		for(Entrega e : cadastroEntregas.getListaEntregas()) {
 			if(e.getValor()>maiorValor) {
 				a=e;
 				maiorValor=e.getValor();
@@ -200,7 +199,7 @@ public class ACMEDelivery {
 	private void enderecoEntrega() {
 		boolean ver = true;
 		double codigo = entrada.nextDouble();
-		for(Entrega e : VcadastroEntregas.entregas) {
+		for(Entrega e : cadastroEntregas.getListaEntregas()) {
 			if(codigo == e.getCodigo()) {
 				System.out.println("9;" + e.getCodigo() + ";" + e.getValor() + ";" + e.getDescricao() + ";" + e.getCliente().getEndereco());
 				ver = false;
@@ -215,7 +214,7 @@ public class ACMEDelivery {
 		boolean ver = true;
 		entrada.nextLine();
 		String email = entrada.nextLine();
-			for(Cliente c : clientela.listaClientes) {
+			for(Cliente c : clientela.getListaCliente()) {
 				if(email.equalsIgnoreCase(c.getEmail())) {
 					ver=false;
 					if(c.temEntregas()) {
@@ -265,7 +264,7 @@ public class ACMEDelivery {
 		String email = entrada.nextLine();
 		Cliente c = clientela.pesquisaCliente(email);
 		Entrega e = new Entrega(codigo, preco, desc, c);
-		if(VcadastroEntregas.cadastraEntrega(e)) {
+		if(cadastroEntregas.cadastraEntrega(e)) {
 			c.adicionaEntrega(e);
 			System.out.println("Entrega cadastrada!");
 		} else {
@@ -292,17 +291,13 @@ public class ACMEDelivery {
 		String desc = entrada.nextLine();
 		System.out.println(desc);
 		Entrega e = new Entrega(codigo, preco, desc, c);
-		if(VcadastroEntregas.cadastraEntrega(e)) {
+		if(cadastroEntregas.cadastraEntrega(e)) {
 			System.out.println("Entrega registrada!");
 			c.adicionaEntrega(e);
 
 		} else {
 			System.out.println("Entrega invalida!");
 		}
-	}
-
-	private void segredo() {
-		System.out.println(segr.a + clientela.b + edo.c + VcadastroEntregas.d + "<3");
 	}
 
 

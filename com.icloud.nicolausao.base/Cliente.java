@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class Cliente {
 
-	public String a = "ya";
 	private String email;
 	private String nome;
 	private String endereco;
