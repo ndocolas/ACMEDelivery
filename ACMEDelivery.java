@@ -24,7 +24,7 @@ class ACMEDelivery {
 
 	public ACMEDelivery() {
 		try {
-			BufferedReader streamEntrada = new BufferedReader(new FileReader("aqruivoentrada.txt"));
+			BufferedReader streamEntrada = new BufferedReader(new FileReader("arquivoentrada.txt"));
 			entrada = new Scanner(streamEntrada);
 			PrintStream streamSaida = new PrintStream("arquivosaida.txt", StandardCharsets.UTF_8);
 			System.setOut(streamSaida);

@@ -1,0 +1,17 @@
+1; maria@e-mail.com; Maria da Silva; R. Um, 1
+1; joana@mail.com; Joana Dark; Av. Dois, 2
+1; pedro@email.com.br; Pedro de Souza; Estrada Tres, 3
+2;111;111.11;Pizza;maria@e-mail.com
+2;222;222.22;Espada;joana@mail.com
+2;333;333.33;SSD;pedro@email.com.br
+2;444;444.44;Escudo;joana@mail.com
+2;555;555.55;Webcam;pedro@email.com.br
+3;3
+4;5
+5;maria@e-mail.com;Maria da Silva;R. Um, 1
+6;333;333.33;SSD;pedro@email.com.br;Pedro de Souza;Estrada Tres, 3
+7;joana@mail.com;222;222.22;Espada
+7;joana@mail.com;444;444.44;Escudo
+8;555;555.55;Webcam
+9;111;111.11;Pizza;R. Um, 1
+10;pedro@email.com.br;Pedro de Souza;888.88
