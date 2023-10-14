@@ -5,6 +5,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Scanner;
 
+import base.Cliente;
+import base.Entrega;
+import controle.CadastroEntregas;
+import controle.Clientela;
+
 class mainGeral {
 	public static void main(String[] args) {
 		new ACMEDelivery().executa();
@@ -12,17 +17,16 @@ class mainGeral {
 }
 class ACMEDelivery {
 
-	private Scanner entrada = null;
+	private Scanner entrada;
 	private PrintStream saidaPadrao = System.out;
-
 	private Clientela clientela;
 	private CadastroEntregas cadastroEntregas;
 
 	public ACMEDelivery() {
 		try {
-			BufferedReader streamEntrada = new BufferedReader(new FileReader("entrada.txt"));
+			BufferedReader streamEntrada = new BufferedReader(new FileReader("aqruivoentrada.txt"));
 			entrada = new Scanner(streamEntrada);
-			PrintStream streamSaida = new PrintStream("saida.txt", StandardCharsets.UTF_8);
+			PrintStream streamSaida = new PrintStream("arquivosaida.txt", StandardCharsets.UTF_8);
 			System.setOut(streamSaida);
 		} catch (Exception e) {
 			System.out.println(e);
@@ -96,9 +100,7 @@ class ACMEDelivery {
 	}
 
 	private void cadastraCliente() {
-		String email;
-		String nome;
-		String end;
+		String email, nome, end;
 
 		email = entrada.nextLine();
 		while (!email.equals("-1")) {
@@ -106,7 +108,7 @@ class ACMEDelivery {
 			end = entrada.nextLine();
 
 			if(clientela.cadastraCliente(new Cliente(nome, email, end))) {
-				System.out.println("1;" + email + ";" + nome + ";" + end);
+				System.out.println(String.format("1; %s; %s; %s", email, nome, end));
 			}
 			email = entrada.nextLine();
 		}

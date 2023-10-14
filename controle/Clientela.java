@@ -1,4 +1,7 @@
+package controle;
+
 import java.util.ArrayList;
+import base.Cliente;
 
 public class Clientela {
 

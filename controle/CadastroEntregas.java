@@ -1,4 +1,7 @@
+package controle;
+
 import java.util.ArrayList;
+import base.Entrega;
 
 public class CadastroEntregas {
 
