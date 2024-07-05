@@ -4,28 +4,27 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import base.Cliente;
 import base.Entrega;
 
-class ACMEDelivery {
+public class ACMEDelivery {
 
 	private Scanner entrada;
-	private PrintStream saidaPadrao = System.out;
 	private Clientela clientela;
 	private CadastroEntregas cadastroEntregas;
 
 	public ACMEDelivery() {
 		try {
-			BufferedReader streamEntrada = new BufferedReader(new FileReader("arquivoentrada.txt"));
-			entrada = new Scanner(streamEntrada);
-			PrintStream streamSaida = new PrintStream("arquivosaida.txt", StandardCharsets.UTF_8);
-			System.setOut(streamSaida);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+			entrada = new Scanner(new BufferedReader(new FileReader("arquivoentrada.txt")));
+			System.setOut(new PrintStream("arquivosaida.txt", StandardCharsets.UTF_8));
+		} catch (Exception e) {}
+
 		Locale.setDefault(Locale.ENGLISH);
 
 		clientela = new Clientela();
@@ -33,14 +32,14 @@ class ACMEDelivery {
 	}
 
 	private void restauraES() {
-		System.setOut(saidaPadrao);
+		System.setOut(System.out);
 		entrada = new Scanner(System.in);
 	}
 
 	public void executa() {
 		getAll();
 		restauraES();
-		pontoExtra();
+		// pontoExtra();
 	}
 
 	private void pontoExtra() {
@@ -49,36 +48,18 @@ class ACMEDelivery {
 			int opcao = entrada.nextInt();
 			while (opcao!=0) {
 				switch (opcao) {
-					case 1:
-						opcao1();
-						break;
-					case 2:
-						opcao2();
-						break;
-					case 3:
-						opcao3();
-						break;
-					case 4:
-						System.out.println(clientela.toString());
-						break;
-					case 5:
-						System.out.println(cadastroEntregas.toString());
-						break;
-					case 6:
-						System.out.println(clientela.toString());
-						System.out.println(cadastroEntregas.toString());
-						break;
-					default:
-						break;
+					case 1 -> opcao1();
+					case 2 -> opcao2();
+					case 3 -> opcao3();
+					case 4 -> System.out.println(clientela.toString());
+					case 5 -> System.out.println(cadastroEntregas.toString());
+					case 6 -> System.out.println(clientela.toString() + "\n " + cadastroEntregas.toString());
 				}
 				menu();
 				opcao = entrada.nextInt();
 			}
-		} catch(Exception e) {
-			System.out.println(e.getMessage());
-		} finally {
-		entrada.close();
-		}
+		} catch(Exception e) {} 
+		finally {entrada.close();}
 	}
 
 	private void getAll() {
@@ -103,23 +84,21 @@ class ACMEDelivery {
 			end = entrada.nextLine();
 
 			if(clientela.cadastraCliente(new Cliente(nome, email, end))) {
-				System.out.println(String.format("1; %s; %s; %s", email, nome, end));
+				System.out.println(String.format("1;%s;%s;%s", email, nome, end));
 			}
 			email = entrada.nextLine();
 		}
 	}
 
 	private void cadastraEntrega() {
-
 		int codigo;
 		double preco;
 		String desc;
 		String email;
-		codigo = entrada.nextInt();
+		codigo = Integer.parseInt(entrada.nextLine());
 
 		while (codigo != -1) {
-			preco = entrada.nextDouble();
-			entrada.nextLine();
+			preco = Double.parseDouble(entrada.nextLine());
 			desc = entrada.nextLine();
 			email = entrada.nextLine();
 
@@ -127,7 +106,7 @@ class ACMEDelivery {
 				System.out.println("2;" + codigo + ";" + preco + ";" + desc + ";" + email);
 			}
 
-			codigo = entrada.nextInt();
+			codigo = Integer.parseInt(entrada.nextLine());
 		}
 	}
 
@@ -140,82 +119,52 @@ class ACMEDelivery {
 	}
 
 	private void verCliente() {
-		boolean ver = true;
-		entrada.nextLine();
+		AtomicBoolean ver = new AtomicBoolean(true);
 		String email = entrada.nextLine();
-		for(Cliente x : clientela.getListaCliente()) {
-			if(email.equalsIgnoreCase(x.getEmail())) {
-				System.out.println("5;" + x.getEmail() + ";" + x.getNome() + ";" + x.getEndereco());
-				ver = false;
-			}
-		}
-		if(ver) {
-			System.out.println("5;Cliente inexistente");
-		}
+		clientela.getListaCliente().stream().filter(x -> email.equalsIgnoreCase(x.getEmail())).
+		forEach(x -> {System.out.println("5;" + x.getEmail() + ";" + x.getNome() + ";" + x.getEndereco()); ver.set(false);});
+		if(ver.get()) System.out.println("5;Cliente inexistente");
 	}
 
 	private void verEntrega() {
-		boolean ver = true;
-		int codigo = entrada.nextInt();
-		for(Entrega e : cadastroEntregas.getListaEntregas()) {
-			if(codigo == e.getCodigo()) {
-				System.out.println("6;" + e.getCodigo() + ";" + e.getValor() + ";" + e.getDescricao() + ";" + e.getCliente().getEmail() + ";" + e.getCliente().getNome() + ";" + e.getCliente().getEndereco());
-				ver = false;
-			}
-		}
-		if(ver) {
-			System.out.println("6;Entrega inexistente");
-		}
+		AtomicBoolean ver = new AtomicBoolean(true);
+		int codigo = Integer.parseInt(entrada.nextLine());
+		cadastroEntregas.getListaEntregas().stream().filter(x -> codigo == x.getCodigo()).
+		forEach(e -> {System.out.println(String.format("6;%d;%.2f;%s;%s;%s;%s", e.getCodigo(), e.getValor(), e.getDescricao(), e.getCliente().getEmail(), e.getCliente().getNome(), e.getCliente().getEndereco())); ver.set(false);});
+		if(ver.get())System.out.println("6;Entrega inexistente");
 	}
 
 	private void dadosEntregaCliente() {
-		boolean ver = true;
-		entrada.nextLine();
+		AtomicBoolean ver = new AtomicBoolean(true);
 		String email = entrada.nextLine();
-		for(Cliente c : clientela.getListaCliente()) {
-			if(email.equalsIgnoreCase(c.getEmail())) {
-				c.retornaDadosEntrega();
-				ver = false;
-			}
-		}
-		if(ver) {
-			System.out.println("7;Cliente inexistente");
-		}
+		clientela.getListaCliente().stream().filter(x -> email.equalsIgnoreCase(x.getEmail()))
+		.forEach(e -> {e.retornaDadosEntrega(); ver.set(false);});
+		if(ver.get()) System.out.println("7;Cliente inexistente");
 	}
 
 	private void entregaMaiorValor() {
-		Entrega a = new Entrega(0,0,"", null);
-		double maiorValor = 0;
-		if(cadastroEntregas.getListaEntregas().isEmpty()) System.out.println("8;Entrega inexistente");
-		for(Entrega e : cadastroEntregas.getListaEntregas()) {
-			if(e.getValor()>maiorValor) {
-				a=e;
-				maiorValor=e.getValor();
-			}
-		}
-		System.out.println("8;" + a.getCodigo() + ";" + a.getValor() + ";" + a.getDescricao());
+		Optional<Entrega> entregacomMaiorValor = 
+		cadastroEntregas.getListaEntregas().stream()
+		.max(Comparator.comparing(Entrega::getValor));
+		if(entregacomMaiorValor.isPresent()) {
+		System.out.println("8;" + entregacomMaiorValor.get().getCodigo() +
+		";" + entregacomMaiorValor.get().getValor() + 
+		";" + entregacomMaiorValor.get().getDescricao());
+		} else System.out.println("8;Entrega inexistente");
 	}
 
 	private void enderecoEntrega() {
-		boolean ver = true;
-		double codigo = entrada.nextDouble();
-		for(Entrega e : cadastroEntregas.getListaEntregas()) {
-			if(codigo == e.getCodigo()) {
-				System.out.println("9;" + e.getCodigo() + ";" + e.getValor() + ";" + e.getDescricao() + ";" + e.getCliente().getEndereco());
-				ver = false;
-			}
-		}
-		if(ver) {
-			System.out.println("9;Entrega inexistente");
-		}
+		AtomicBoolean ver = new AtomicBoolean(true);
+		double codigo = Double.parseDouble(entrada.nextLine());
+		cadastroEntregas.getListaEntregas().stream().filter(x -> codigo == x.getCodigo())
+		.forEach(e -> {System.out.println(String.format("9;%d;%.2f;%s;%s", e.getCodigo(), e.getValor(), e.getDescricao(), e.getCliente().getEndereco())); ver.set(false);});
+		if(ver.get()) System.out.println("9;Entrega inexistente");
 	}
 
 	private void somatorioCliente() {
 		boolean ver = true;
-		entrada.nextLine();
 		String email = entrada.nextLine();
-			for(Cliente c : clientela.getListaCliente()) {
-				if(email.equalsIgnoreCase(c.getEmail())) {
+			for(Cliente c  : clientela.getListaCliente()) { if(email.equalsIgnoreCase(c.getEmail())) {
 					ver=false;
 					if(c.temEntregas()) {
 						String x = "10;" + c.getEmail() + ";" + c.getNome() + ";";
@@ -232,19 +181,18 @@ class ACMEDelivery {
 
 	}
 	private void menu() {
-		System.out.println("Insira a opcao desejada:");
+		System.out.println("Insira a opcao desejada :"); 
 		System.out.println("[1] Cadastrar um novo cliente. \n" +
-				"[2] Cadastrar uma nova entrega. \n" +
-				"[3] Cadastrar um novo cliente e uma entrega correspondente. \n" +
-				"[4] Mostrar todos os clientes.  \n" +
-				"[5] Mostrar todas as entregas. \n" +
-				"[6] Mostrar todas informacoes do sistema. \n" +
-				"[0] Sair do sistema." );
+				  		   "[2] Cadastrar uma nova entrega. \n" +
+				  		   "[3] Cadastrar um novo cliente e uma entrega correspondente. \n" +
+				  		   "[4] Mostrar todos os clientes.  \n" +
+				  		   "[5] Mostrar todas as entregas. \n" +
+				  		   "[6] Mostrar todas informacoes do sistema. \n" +
+				  		   "[0] Sair do sistema." );
 	}
 
 	private void opcao1() {
-		System.out.println("Insira o Nome, Email e Endereco do cliente desejado: ");
-		entrada.nextLine();
+		System.out.println("Insira o Nome, Email e Endereco do cliente desejado : "); entrada.nextLine();
 		String nome = entrada.nextLine();
 		String email = entrada.nextLine();
 		String ende = entrada.nextLine();
@@ -273,8 +221,7 @@ class ACMEDelivery {
 	}
 
 	private void opcao3() {
-		System.out.println("Insira o nome, email e endereco em ordem, para o seu cliente:");
-		entrada.nextLine();
+		System.out.println("Insira o nome, email e endereco em ordem, para o seu cliente :"); entrada.nextLine();
 		String nome = entrada.nextLine();
 		String email = entrada.nextLine();
 		String endereco = entrada.nextLine();
@@ -284,8 +231,7 @@ class ACMEDelivery {
 		} else {
 			System.out.println("Cliente invalido");
 		}
-		System.out.println("Insira uma entrega correspondente (codigo, preco, descricao): ");
-		int codigo = entrada.nextInt();
+		System.out.println("Insira uma entrega correspondente (codigo, preco, descricao) : "); int codigo = entrada.nextInt();
 		double preco = entrada.nextDouble();
 		entrada.nextLine();
 		String desc = entrada.nextLine();
@@ -299,6 +245,4 @@ class ACMEDelivery {
 			System.out.println("Entrega invalida!");
 		}
 	}
-
-
 }
