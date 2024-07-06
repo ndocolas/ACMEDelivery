@@ -1,6 +1,8 @@
 package controle;
 
 import java.io.BufferedReader;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -18,7 +20,6 @@ public class ACMEDelivery {
 	private Scanner entrada;
 	private Clientela clientela;
 	private CadastroEntregas cadastroEntregas;
-	private PrintStream out = System.out;
 
 	public ACMEDelivery() {
 		try {
@@ -34,14 +35,14 @@ public class ACMEDelivery {
 	}
 
 	private void restauraES() {
-		System.setOut(out);
+		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 		entrada = new Scanner(System.in);
 	}
 
 	private void executa() {
 		getAll();
 		restauraES();
-		//pontoExtra();
+		pontoExtra();
 	}
 
 	private void pontoExtra() {
@@ -55,13 +56,13 @@ public class ACMEDelivery {
 					case 3 -> opcao3();
 					case 4 -> System.out.println(clientela.toString());
 					case 5 -> System.out.println(cadastroEntregas.toString());
-					case 6 -> System.out.println(clientela.toString() + "\n " + cadastroEntregas.toString());
+					case 6 -> System.out.printf("%s%n%s" , clientela.toString(), cadastroEntregas.toString());
 				}
 				menu();
 				opcao = entrada.nextInt();
 			}
 		} catch(Exception e) {} 
-		finally {entrada.close();}
+		finally{entrada.close();}
 	}
 
 	private void getAll() {
@@ -85,9 +86,9 @@ public class ACMEDelivery {
 			nome = entrada.nextLine();
 			end = entrada.nextLine();
 
-			if(clientela.cadastraCliente(new Cliente(nome, email, end))) {
-				System.out.printf("1;%s;%s;%s%n", email, nome, end);
-			}
+			System.out.print((clientela.cadastraCliente(new Cliente(nome, email, end))) ?
+			String.format("1;%s;%s;%s%n", email, nome, end):"");
+
 			email = entrada.nextLine();
 		}
 	}
@@ -104,9 +105,9 @@ public class ACMEDelivery {
 			desc = entrada.nextLine();
 			email = entrada.nextLine();
 
-			if(cadastroEntregas.cadastraEntrega(new Entrega(codigo, preco, desc, clientela.pesquisaCliente(email)))) {
-				System.out.printf("2;%d;%.2f;%s;%s%n", codigo, preco, desc, email);
-			}
+			System.out.print((cadastroEntregas.cadastraEntrega(new Entrega(codigo, preco, desc, clientela.pesquisaCliente(email))))?
+			String.format("2;%d;%.2f;%s;%s%n", codigo, preco, desc, email) : "");
+
 			codigo = Integer.parseInt(entrada.nextLine());
 		}
 	}
@@ -147,11 +148,10 @@ public class ACMEDelivery {
 		Optional<Entrega> entregacomMaiorValor = 
 		cadastroEntregas.getListaEntregas().stream()
 		.max(Comparator.comparing(Entrega::getValor));
-		if(entregacomMaiorValor.isPresent()) {
-		System.out.println("8;" + entregacomMaiorValor.get().getCodigo() + //arrumar
-		";" + entregacomMaiorValor.get().getValor() + 
-		";" + entregacomMaiorValor.get().getDescricao());
-		} else System.out.println("8;Entrega inexistente");
+		System.out.println((entregacomMaiorValor.isPresent()) ?
+		String.format("8;%d;%.2f;%s", entregacomMaiorValor.get().getCodigo(),entregacomMaiorValor.get().getValor(), entregacomMaiorValor.get().getDescricao())
+		:
+		"8;Entrega inexistente");
 	}
 
 	private void enderecoEntrega() {
