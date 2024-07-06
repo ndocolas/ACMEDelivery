@@ -112,13 +112,8 @@ public class ACMEDelivery {
 		}
 	}
 
-	private void quantidadeClientes() {
-		System.out.printf("3;%d%n", clientela.getListaCliente().size());
-	}
-
-	private void quantidadeEntregas() {
-		System.out.printf("4;%d%n", cadastroEntregas.getListaEntregas().size());
-	}
+	private void quantidadeClientes() {System.out.printf("3;%d%n", clientela.getListaCliente().size());}
+	private void quantidadeEntregas() {System.out.printf("4;%d%n", cadastroEntregas.getListaEntregas().size());}
 
 	private void verCliente() {
 		AtomicBoolean ver = new AtomicBoolean(true);
