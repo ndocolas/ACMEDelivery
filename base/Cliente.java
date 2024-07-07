@@ -3,9 +3,7 @@ import java.util.ArrayList;
 
 public class Cliente {
 
-	private String email;
-	private String nome;
-	private String endereco;
+	private String email, nome, endereco;
 	private ArrayList<Entrega> entregasCliente = new ArrayList<>();
 
 	public Cliente(String nome, String email, String endereco) {
@@ -15,58 +13,20 @@ public class Cliente {
 	}
 
 	public double somatorioEntregas() {
-		double contador = 0.0;
-		for(Entrega e : entregasCliente) {
-			contador += e.getValor();
-		}
-		return contador;
+		return entregasCliente.stream().mapToDouble(Entrega::getValor).sum();
 	}
 
-	@Override
-	public String toString() {
-		return nome + email + endereco;
-	}
+	public boolean temEntregas() {return !entregasCliente.isEmpty();}
 
-	public boolean temEntregas() {
-		if(entregasCliente.isEmpty()) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public void retornaDadosCliente() {
-		System.out.println("Nome: " + nome
-				+ "\nEmail: " + email
-				+ "\nEndereco: " + endereco);
-	}
+	public void retornaDadosCliente() {System.out.printf("Nome: %s%nEmail: %s%nEndereco: %s%n", nome, email, endereco);}
 
 	public void retornaDadosEntrega() {
-		for(Entrega e : entregasCliente) {
-			System.out.println("7;" + email + ";" + e.getCodigo() + ";" + e.getValor() + ";" + e.getDescricao());
-		}
+		entregasCliente.stream().forEach(e -> System.out.printf("7;%s;%d;%.2f;%s%n", email, e.getCodigo(), e.getValor(), e.getDescricao()));
 	}
 
-	public boolean adicionaEntrega(Entrega entrega) {
-			return entregasCliente.add(entrega);
-	}
-
-	public ArrayList<Entrega> pesquisaEntregas() {
-		return entregasCliente;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public String getEndereco() {
-		return endereco;
-	}
-
-
-
+	public boolean adicionaEntrega(Entrega entrega) {return entregasCliente.add(entrega);}	
+	public ArrayList<Entrega> pesquisaEntregas() {return entregasCliente;}	
+	public String getEmail() {return email;}	
+	public String getNome() {return nome;}	
+	public String getEndereco() {return endereco;}
 }

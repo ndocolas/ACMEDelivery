@@ -13,21 +13,8 @@ public class Entrega {
 			this.cliente = cliente;
 	}
 
-	public int getCodigo() {
-		return codigo;
-	}
-
-	public double getValor() {
-		return valor;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-
+	public int getCodigo() {return codigo;}	
+	public double getValor() {return valor;}	
+	public String getDescricao() {return descricao;}	
+	public Cliente getCliente() {return cliente;}
 }
