@@ -13,7 +13,7 @@ public class Cliente {
 	}
 
 	public double somatorioEntregas() {
-		return entregasCliente.stream().mapToDouble(Entrega::getValor).sum();
+		return entregasCliente.stream().mapToDouble(Entrega::valor).sum();
 	}
 
 	public boolean temEntregas() {return !entregasCliente.isEmpty();}
@@ -21,7 +21,7 @@ public class Cliente {
 	public void retornaDadosCliente() {System.out.printf("Nome: %s%nEmail: %s%nEndereco: %s%n", nome, email, endereco);}
 
 	public void retornaDadosEntrega() {
-		entregasCliente.stream().forEach(e -> System.out.printf("7;%s;%d;%.2f;%s%n", email, e.getCodigo(), e.getValor(), e.getDescricao()));
+		entregasCliente.stream().forEach(e -> System.out.printf("7;%s;%d;%.2f;%s%n", email, e.codigo(), e.valor(), e.descricao()));
 	}
 
 	public boolean adicionaEntrega(Entrega entrega) {return entregasCliente.add(entrega);}	

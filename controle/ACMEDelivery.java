@@ -126,8 +126,8 @@ public class ACMEDelivery {
 	private void verEntrega() {
 		AtomicBoolean ver = new AtomicBoolean(true);
 		int codigo = Integer.parseInt(entrada.nextLine());
-		cadastroEntregas.getListaEntregas().stream().filter(x -> codigo == x.getCodigo()).
-		forEach(e -> {System.out.printf("6;%d;%.2f;%s;%s;%s;%s%n", e.getCodigo(), e.getValor(), e.getDescricao(), e.getCliente().getEmail(), e.getCliente().getNome(), e.getCliente().getEndereco()); ver.set(false);});
+		cadastroEntregas.getListaEntregas().stream().filter(x -> codigo == x.codigo()).
+		forEach(e -> {System.out.printf("6;%d;%.2f;%s;%s;%s;%s%n", e.codigo(), e.valor(), e.descricao(), e.cliente().getEmail(), e.cliente().getNome(), e.cliente().getEndereco()); ver.set(false);});
 		if(ver.get())System.out.println("6;Entrega inexistente");
 	}
 
@@ -142,9 +142,9 @@ public class ACMEDelivery {
 	private void entregaMaiorValor() {
 		Optional<Entrega> entregacomMaiorValor = 
 		cadastroEntregas.getListaEntregas().stream()
-		.max(Comparator.comparing(Entrega::getValor));
+		.max(Comparator.comparing(Entrega::valor));
 		System.out.println((entregacomMaiorValor.isPresent()) ?
-		String.format("8;%d;%.2f;%s", entregacomMaiorValor.get().getCodigo(),entregacomMaiorValor.get().getValor(), entregacomMaiorValor.get().getDescricao())
+		String.format("8;%d;%.2f;%s", entregacomMaiorValor.get().codigo(),entregacomMaiorValor.get().valor(), entregacomMaiorValor.get().descricao())
 		:
 		"8;Entrega inexistente");
 	}
@@ -152,8 +152,8 @@ public class ACMEDelivery {
 	private void enderecoEntrega() {
 		AtomicBoolean ver = new AtomicBoolean(true);
 		double codigo = Double.parseDouble(entrada.nextLine());
-		cadastroEntregas.getListaEntregas().stream().filter(x -> codigo == x.getCodigo())
-		.forEach(e -> {System.out.printf("9;%d;%.2f;%s;%s%n", e.getCodigo(), e.getValor(), e.getDescricao(), e.getCliente().getEndereco()); ver.set(false);});
+		cadastroEntregas.getListaEntregas().stream().filter(x -> codigo == x.codigo())
+		.forEach(e -> {System.out.printf("9;%d;%.2f;%s;%s%n", e.codigo(), e.valor(), e.descricao(), e.cliente().getEndereco()); ver.set(false);});
 		if(ver.get()) System.out.println("9;Entrega inexistente");
 	}
 

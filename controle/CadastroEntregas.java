@@ -12,21 +12,21 @@ public class CadastroEntregas {
 	public CadastroEntregas () {entregas = new ArrayList<>();}
 
     public boolean cadastraEntrega(Entrega entrega) {
-        if (entrega == null || entrega.getCliente() == null) return false;
+        if (entrega == null || entrega.cliente() == null) return false;
         
         return (entregas.stream()
-            .anyMatch(e -> e.getCodigo() == entrega.getCodigo())) ?
+            .anyMatch(e -> e.codigo() == entrega.codigo())) ?
 			false
 			:
-        	(entregas.add(entrega) && entrega.getCliente().adicionaEntrega(entrega));
+        	(entregas.add(entrega) && entrega.cliente().adicionaEntrega(entrega));
     }
 
 	public Entrega pesquisaEntrega(int codigo) {
-		return entregas.stream().filter(e -> e.getCodigo() == codigo).findFirst().orElse(null);
+		return entregas.stream().filter(e -> e.codigo() == codigo).findFirst().orElse(null);
 	}
 
 	public ArrayList<Entrega> pesquisaEntrega(String email) {
-		return entregas.stream().filter(e -> e.getCliente().getEmail().equalsIgnoreCase(email))
+		return entregas.stream().filter(e -> e.cliente().getEmail().equalsIgnoreCase(email))
 		.collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 	}
 
@@ -34,7 +34,7 @@ public class CadastroEntregas {
 	public String toString() {
 		return entregas.stream()
 			.map(e -> String.format("%nCodigo: %d%nValor: %.2f%nDescricao: %s%nCliente: %s%n",
-				e.getCodigo(), e.getValor(), e.getDescricao(), e.getCliente().getEmail()))
+				e.codigo(), e.valor(), e.descricao(), e.cliente().getEmail()))
 			.collect(Collectors.joining());
 	}
 	
